@@ -14,6 +14,7 @@ s = Service(executable_path='chromedriver-win64/chromedriver.exe')
 
 chrome_options = Options()
 chrome_options.add_argument("--user-data-dir=C:\\Users\\Dima (IfLunatic)\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
+chrome_options.add_argument("--disable-web-security")
 driver = webdriver.Chrome(service=s, options=chrome_options)
 
 
@@ -45,12 +46,9 @@ try:
     active_window = driver.window_handles[-1]
     driver.switch_to.window(active_window)
 
-    password_input = WebDriverWait(driver, 10).until(
-        EC.visibility_of_element_located((By.XPATH, '//*[@id="password"]'))
-    )
-    password_input.send_keys("ваш_пароль")
-
-    time.sleep(5)
+    driver.execute_script("document.getElementById('password').value = 'password';")
+    time.sleep(2)
+    driver.execute_script("document.getElementById('password').dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));")
 
 
 except Exception as ex:
